@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"os/exec"
 	"regexp"
 )
@@ -14,7 +13,7 @@ func enumerateDevices() ([]device, error) {
 	}
 	out, err := exec.Command("lsusb").Output()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	var deviceList []device

@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"log"
 	"os/exec"
 	"regexp"
 	"strings"
@@ -20,7 +19,7 @@ func enumerateDevices() ([]device, error) {
 
 	out, err := exec.Command("system_profiler", "SPUSBDataType").Output()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	scanner := bufio.NewScanner(bytes.NewReader(out))
 
