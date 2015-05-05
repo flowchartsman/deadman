@@ -29,6 +29,8 @@ func main() {
 
 	check := time.NewTicker(1 * time.Second)
 
+	log.Println("deadman started (press ctrl-c to exit)")
+
 	for {
 		select {
 		case <-check.C:

@@ -22,6 +22,7 @@ sudo access to ```shutdown``` with NOPASSWD is required on relevant systems. (na
 * Add support for FreeBSD
 * Moar testing
 * Moar docs
+* Device whitelisting
 * Better logging. You won't see much at the moment as it shuts down as soon as it can.
 * Hook into system calls using shared libs as much as possible. For now, all systems parse ```lsusb``` or its equivalent every second
 * Make check interval configurable
