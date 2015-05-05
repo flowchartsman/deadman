@@ -3,7 +3,7 @@ A usb-based dead man's switch for your computer.
 
 ## Usage
 ```
-./deadman
+sudo ./deadman
 ```
 -or-
 ```
@@ -14,9 +14,6 @@ Can be killed with SIGINT (ctrl-c)
 
 ## Purpose
 Inspired by [usbkill](https://github.com/hephaest0s/usbkill), I thought I'd make a version in Go that has no dependencies and runs on Windows as well. It currently has feature parity with USBKill, meaning that the moment a new USB device is added or removed, your system will shut down.
-
-## Status
-sudo access to ```shutdown``` with NOPASSWD is required on relevant systems. (natch)
 
 ## TODO
 * Add support for FreeBSD

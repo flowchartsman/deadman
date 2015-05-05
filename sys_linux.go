@@ -26,13 +26,10 @@ func enumerateDevices() ([]device, error) {
 }
 
 func shutdownNow() error {
-	if err := checkExe("sudo"); err != nil {
-		return err
-	}
 	if err := checkExe("shutdown"); err != nil {
 		return err
 	}
-	err := exec.Command("sudo", "shutdown", "-h", "now").Run()
+	err := exec.Command("shutdown", "-h", "now").Run()
 
 	//Not that this matters
 	return err
