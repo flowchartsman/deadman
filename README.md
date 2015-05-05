@@ -2,9 +2,13 @@
 A usb-based dead man's switch for your computer.
 
 ## Usage
-```./deadman```
+```
+./deadman
+```
 -or-
-```deadman.exe```
+```
+deadman.exe
+```
 
 Can be killed with SIGINT (ctrl-c)
 
