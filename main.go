@@ -41,7 +41,7 @@ func main() {
 			for _, d := range devices {
 				if _, ok := deviceMap[d.ID]; !ok {
 					log.Printf("New device: %s\n", d.Name)
-					os.Exit(1) // run commands
+					shutdownNow()
 				}
 				deviceMap[d.ID] = now
 			}
@@ -50,7 +50,7 @@ func main() {
 			for id, t := range deviceMap {
 				if t != now {
 					log.Printf("Device with id %s has been removed\n", id)
-					os.Exit(1) //run commands
+					shutdownNow()
 				}
 			}
 		case <-sigint:
