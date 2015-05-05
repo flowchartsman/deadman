@@ -10,6 +10,9 @@ import (
 
 //TODO: Call DLL directly
 func enumerateDevices() ([]device, error) {
+	if err := checkExe("powershell"); err != nil {
+		return nil, err
+	}
 	cmd := exec.Command("powershell", "-command", `gwmi Win32_USBControllerDevice|%{[wmi]($_.Dependent)}|Select-Object Description,DeviceID|ConvertTo-CSV -notypeinformation|select -skip 1`)
 	out, err := cmd.Output()
 	if err != nil {

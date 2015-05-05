@@ -14,6 +14,9 @@ var locationRE = regexp.MustCompile(`^Location ID: (.*)$`)
 
 //TODO: Call library directly
 func enumerateDevices() ([]device, error) {
+	if err := checkExe("system_profiler"); err != nil {
+		return nil, err
+	}
 
 	out, err := exec.Command("system_profiler", "SPUSBDataType").Output()
 	if err != nil {

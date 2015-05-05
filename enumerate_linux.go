@@ -9,6 +9,9 @@ import (
 var parseRE = regexp.MustCompile(`(?m)^.*ID (\S+) (.*)$`)
 
 func enumerateDevices() ([]device, error) {
+	if err := checkExe("lsusb"); err != nil {
+		return nil, err
+	}
 	out, err := exec.Command("lsusb").Output()
 	if err != nil {
 		log.Fatal(err)
