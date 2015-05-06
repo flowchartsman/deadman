@@ -1,5 +1,5 @@
-# deadman
-A usb-based dead man's switch for your computer.
+![deadman](github/logo.png)
+deadman is a usb-based dead man's switch for your computer.
 
 ## Usage
 ```
