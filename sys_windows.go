@@ -5,6 +5,7 @@ import (
 	"encoding/csv"
 	"errors"
 	"os/exec"
+	"syscall"
 )
 
 //TODO: Call DLL directly
@@ -13,6 +14,7 @@ func enumerateDevices() ([]device, error) {
 		return nil, err
 	}
 	cmd := exec.Command("powershell", "-command", `gwmi Win32_USBControllerDevice|%{[wmi]($_.Dependent)}|Select-Object Description,DeviceID|ConvertTo-CSV -notypeinformation|select -skip 1`)
+	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	out, err := cmd.Output()
 	if err != nil {
 		return nil, err
