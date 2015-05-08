@@ -32,12 +32,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	deviceMap := map[string]int64{}
+	deviceMap := map[device]int64{}
 
 	if len(initialDevices) > 0 {
 		now := time.Now().UnixNano()
 		for _, d := range initialDevices {
-			deviceMap[d.ID] = now
+			deviceMap[d] = now
 		}
 	} else {
 		log.Fatal("No devices found")
@@ -60,17 +60,17 @@ func main() {
 			}
 			// Look to see if there are any new devicies
 			for _, d := range devices {
-				if _, ok := deviceMap[d.ID]; !ok {
-					log.Printf("New device: %s\n", d.Name)
+				if _, ok := deviceMap[d]; !ok {
+					log.Printf("New device: %s [%s]\n", d.Name, d.ID)
 					shutdownSequence(conf)
 				}
-				deviceMap[d.ID] = now
+				deviceMap[d] = now
 			}
 
 			// Look to see if any devices have been removed
-			for id, t := range deviceMap {
+			for d, t := range deviceMap {
 				if t != now {
-					log.Printf("Device with id %s has been removed\n", id)
+					log.Printf("Device %s [%s]  has been removed\n", d.Name, d.ID)
 					shutdownSequence(conf)
 				}
 			}
