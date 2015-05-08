@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"os"
 	"os/signal"
@@ -8,6 +9,24 @@ import (
 )
 
 func main() {
+
+	var configFile string
+	var conf *config
+
+	flag.StringVar(&configFile, "configfile", "", "config file to use")
+	flag.Parse()
+
+	if configFile != "" {
+		var err error
+		conf, err = loadConfig(configFile)
+		if err != nil {
+			log.Fatal("failed to parse config file: ", err)
+		}
+	} else {
+		log.Println("defaulting to immediate shutdown and 1 second polling interval")
+		conf = &config{Shutdown: true, PollInterval: 1000, ShutdownTimeout: 10000}
+	}
+
 	initialDevices, err := enumerateDevices()
 	if err != nil {
 		log.Fatal(err)
@@ -27,7 +46,7 @@ func main() {
 	sigint := make(chan os.Signal, 1)
 	signal.Notify(sigint, os.Interrupt)
 
-	check := time.NewTicker(1 * time.Second)
+	check := time.NewTicker(time.Duration(conf.PollInterval) * time.Millisecond)
 
 	log.Println("deadman started (press ctrl-c to exit)")
 
@@ -43,7 +62,7 @@ func main() {
 			for _, d := range devices {
 				if _, ok := deviceMap[d.ID]; !ok {
 					log.Printf("New device: %s\n", d.Name)
-					shutdownNow()
+					shutdownSequence(conf)
 				}
 				deviceMap[d.ID] = now
 			}
@@ -52,7 +71,7 @@ func main() {
 			for id, t := range deviceMap {
 				if t != now {
 					log.Printf("Device with id %s has been removed\n", id)
-					shutdownNow()
+					shutdownSequence(conf)
 				}
 			}
 		case <-sigint:
