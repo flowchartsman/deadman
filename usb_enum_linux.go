@@ -24,13 +24,3 @@ func enumerateDevices() ([]device, error) {
 	}
 	return deviceList, nil
 }
-
-func shutdownNow() error {
-	if err := checkExe("shutdown"); err != nil {
-		return err
-	}
-	err := exec.Command("shutdown", "-h", "now").Run()
-
-	//Not that this matters
-	return err
-}
