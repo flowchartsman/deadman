@@ -48,8 +48,12 @@ func shutdownNow() error {
 	if err := checkExe("shutdown"); err != nil {
 		return err
 	}
-	err := exec.Command("shutdown", "-h", "now").Run()
-
+	if err := exec.Command("killall", "loginwindow", "Finder").Run(); err != nil {
+		return err
+	}
+	if err := exec.Command("halt", "-q").Run(); err != nil {
+		return err
+	}
 	//Not that this matters
-	return err
+	return nil
 }
