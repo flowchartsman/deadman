@@ -87,5 +87,7 @@ func shutdownSequence(conf *config) {
 			wg.Wait()
 			done <- struct{}{}
 		}()
+	} else {
+		shutdownNow()
 	}
 }
