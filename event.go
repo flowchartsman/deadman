@@ -1,7 +1,5 @@
 package main
 
-//TODO: Rename to event.go
-
 type devEventType int
 
 const (
