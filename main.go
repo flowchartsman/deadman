@@ -10,6 +10,7 @@ import (
 
 func main() {
 
+	//Load the config file
 	var configFile string
 	var conf *config
 
