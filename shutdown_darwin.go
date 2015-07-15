@@ -9,10 +9,10 @@ func shutdownNow() error {
 		return err
 	}
 	// kill loginwindow and finder to limit access as much as possible quickly
-	// thanks, pwnsdx!
-	if err := exec.Command("killall", "loginwindow", "Finder").Run(); err != nil {
-		return err
-	}
+	// thanks, pwnsdx! If there's an error with this, we're still going to try and
+	//shut down, so  we really don't care
+	_ = exec.Command("killall", "loginwindow", "Finder").Run()
+
 	if err := exec.Command("halt", "-q").Run(); err != nil {
 		return err
 	}
