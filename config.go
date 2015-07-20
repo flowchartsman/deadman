@@ -2,6 +2,8 @@ package main
 
 import (
 	"errors"
+	"os"
+
 	"github.com/naoina/toml"
 )
 
@@ -22,7 +24,14 @@ type command struct {
 func loadConfig(filename string) (*config, error) {
 	conf := config{}
 
-	err := toml.UnmarshalFile(filename, &conf)
+	f, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	dec := toml.NewDecoder(f)
+	err = dec.Decode(&conf)
 	if err != nil {
 		return nil, err
 	}
