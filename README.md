@@ -2,6 +2,8 @@
 
 a usb-based dead man's switch for your computer.
 
+****DO NOT USE THIS IN IT'S CURRENT STATE AS AN ANTI-FORENSICS/COMPULSION TOOL THERE ARE CRITICAL EDGE CASES THAT COULD COMPROMISE YOUR FREEDOM OR MORE...**
+
 ## Usage
 ```
 sudo ./deadman
