@@ -59,12 +59,13 @@ func main() {
 			if err != nil {
 				log.Fatal(err)
 			}
-			// Look to see if there are any new devicies
+			// Look to see if there are any new devices
 			for _, d := range devices {
 				if _, ok := deviceMap[d]; !ok {
 					log.Printf("New device: %s [%s]\n", d.Name, d.ID)
 					shutdownSequence(conf)
 				}
+				
 				deviceMap[d] = now
 			}
 
@@ -74,6 +75,7 @@ func main() {
 					log.Printf("Device %s [%s]  has been removed\n", d.Name, d.ID)
 					shutdownSequence(conf)
 				}
+
 			}
 		case <-sigint:
 			log.Println("SIGINT received")
