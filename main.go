@@ -15,7 +15,10 @@ func main() {
 
 	conf := getConfig(configFile)
 
-	deviceMap := getInitialDeviceMap()
+	deviceMap, err := getInitialDeviceMap(conf)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	sigint := make(chan os.Signal, 1)
 	signal.Notify(sigint, os.Interrupt)
@@ -27,7 +30,7 @@ func main() {
 		select {
 		case <-check.C:
 			now := time.Now().UnixNano()
-			checkForNewDevices(deviceMap, now)
+			checkForNewDevices(deviceMap, now, conf)
 			checkForRemovedDevices(deviceMap, now)
 		case <-sigint:
 			log.Println("SIGINT was received, exiting.")
@@ -49,10 +52,10 @@ func getConfig(configFile string) *config {
 	}
 }
 
-func getInitialDeviceMap() map[device]int64 {
+func getInitialDeviceMap(conf *config) (map[device]int64, error) {
 	initialDevices, err := enumerateDevices()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	if len(initialDevices) == 0 {
@@ -62,23 +65,36 @@ func getInitialDeviceMap() map[device]int64 {
 	deviceMap := make(map[device]int64)
 	now := time.Now().UnixNano()
 	for _, d := range initialDevices {
-		deviceMap[d] = now
+		if isExemptDevice(d, conf) {
+			deviceMap[d] = now
+		}
 	}
-	return deviceMap
+	return deviceMap, nil
 }
 
-func checkForNewDevices(deviceMap map[device]int64, now int64) {
+func isExemptDevice(d device, conf *config) bool {
+	for _, wd := range conf.ExemptDevices {
+		if wd.Name == d.Name && wd.ID == d.ID {
+			return true
+		}
+	}
+	return false
+}
+
+func checkForNewDevices(deviceMap map[device]int64, now int64, conf *config) {
 	devices, err := enumerateDevices()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	for _, d := range devices {
-		if _, ok := deviceMap[d]; !ok {
+		if _, ok := deviceMap[d]; !ok && isExemptDevice(d, conf) {
 			log.Printf("New device: %s [%s]\n", d.Name, d.ID)
 			shutdownNow()
+			deviceMap[d] = now
+		} else {
+			deviceMap[d] = now
 		}
-		deviceMap[d] = now
 	}
 }
 

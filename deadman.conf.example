@@ -36,3 +36,11 @@ shutdownTimeout = 5000
 
 #commands = [
 #]
+
+# [[ExemptDevices]]
+# Name = "Device A"
+# ID = "1234"
+
+# [[ExemptDevices]]
+# Name = "Device B"
+# ID = "5678"
