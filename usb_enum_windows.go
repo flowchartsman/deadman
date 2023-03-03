@@ -1,9 +1,11 @@
 // Note that this may require additional privileges to execute, depending on the system configuration.
+
 package main
 
 import (
 	"fmt"
 	"syscall"
+	"unicode/utf16"
 	"unsafe"
 )
 
@@ -39,8 +41,8 @@ func enumerateDevices() ([]device, error) {
 	}
 
 	for ret == 0 {
-		classBuf := make([]byte, MAX_CLASS_NAME_LEN)
-		regKeyBuf := make([]byte, MAX_REG_KEY_LEN)
+		classBuf := make([]uint16, MAX_CLASS_NAME_LEN)
+		regKeyBuf := make([]uint16, MAX_REG_KEY_LEN)
 
 		ret, _, _ = cmEnumerateDevices.Call(
 			uintptr(unsafe.Pointer(&GUID_DEVINTERFACE_USB_DEVICE[0])),
@@ -67,7 +69,7 @@ func enumerateDevices() ([]device, error) {
 				uintptr(0),
 			)
 			if ret == 0 {
-				deviceList = append(deviceList, device{string(classBuf), string(regKeyBuf)})
+				deviceList = append(deviceList, device{syscall.UTF16ToString(classBuf), syscall.UTF16ToString(regKeyBuf)})
 			}
 		}
 	}
