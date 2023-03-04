@@ -36,6 +36,7 @@ func enumerateDevices() ([]device, error) {
 		uintptr(unsafe.Pointer(&buf[0])),
 		uintptr(MAX_DEVICE_ID_LEN),
 	)
+
 	if ret != 0 {
 		return nil, fmt.Errorf("failed to enumerate devices: %d", ret)
 	}
