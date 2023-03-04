@@ -1,13 +1,20 @@
 package main
 
 import (
-	"os/exec"
+	"syscall"
 )
 
 func shutdownNow() error {
-	if err := checkExe("shutdown"); err != nil {
-		return err
+	// First, try to call the reboot system call with the appropriate arguments
+	if err := syscall.Reboot(syscall.RB_POWERCYCLE); err == nil {
+		return nil
 	}
-	err := exec.Command("shutdown", "-p", "now").Run()
-	return err
+
+	// If that fails, try to call the halt system call with the appropriate arguments
+	if err := syscall.Reboot(syscall.RB_HALT); err == nil {
+		return nil
+	}
+
+	// If both system calls fail, return an error
+	return fmt.Errorf("failed to initiate system shutdown")
 }
