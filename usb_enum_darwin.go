@@ -23,7 +23,8 @@ import (
 	"unsafe"
 )
 
-// The C library and header are both part of the IOKit framework on macOS, and are included by specifying -framework IOKit as a linker flag.
+// The C library and header are both part of the IOKit framework on macOS, and are
+// included by specifying -framework IOKit as a linker flag.
 // #cgo LDFLAGS: -framework IOKit
 // #include <IOKit/IOKitLib.h>
 import "C"
