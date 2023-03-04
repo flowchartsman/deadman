@@ -1,3 +1,14 @@
+/*
+This file contains a function called shutdownNow() that attempts to initiate
+a forced shutdown of the FreeBSD OS using the syscall package.
+
+The function first tries to call the Reboot system call with the
+RB_POWERCYCLE command, which should initiate an immediate shutdown of the
+system. If that fails, it tries to call the Reboot system call with the
+RB_HALT command, which should initiate a system halt. If both of
+these system calls fail, the function returns an error with the message
+"Failed to initiate system shutdown."
+*/
 package main
 
 import (
