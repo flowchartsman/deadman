@@ -22,6 +22,5 @@ I recently came across [heaphaest0s](https://github.com/hephaest0s)' cool projec
 ## TODO
 * Moar testing
 * Moar docs
-* Device whitelisting
 * Better logging. You won't see much at the moment as it shuts down as soon as it can.
 * Hook into system calls as much as possible. For now, Linux and OSX systems parse ```lsusb``` or its equivalent every second. There is a branch in development for an event-based model, though this still requires polling in both OSX and Windows. On Linux, it can receive udev events via a netlink socket. Whether a similar model is easily obtained in OSX or is even possible in Windows at all is being researched. In the meantime, a more efficient method of polling via WMI is being developed.
