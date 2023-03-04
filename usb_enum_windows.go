@@ -1,5 +1,17 @@
 // Note that this may require additional privileges to execute, depending on the system configuration.
 
+/*
+This file contains a function called enumerateDevices() which uses the CfgMgr32.dll library
+to enumerate all USB devices connected to the system. It does this by calling the
+CM_Enumerate_Devices function with the appropriate arguments to get a list of device IDs.
+It then iterates over the list of IDs and calls the CM_Get_Class_NameW and CM_Open_Class_Key_ExW
+functions to get the device class name and registry key path for each device. The function
+returns a slice of device structs, each of which contains the device name and ID.
+
+Note that this function may require additional privileges to execute, depending on the system
+configuration.
+*/
+
 package main
 
 import (
