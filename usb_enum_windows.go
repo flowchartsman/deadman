@@ -1,5 +1,3 @@
-// Note that this may require additional privileges to execute, depending on the system configuration.
-
 /*
 This file contains a function called enumerateDevices() which uses the CfgMgr32.dll library
 to enumerate all USB devices connected to the system. It does this by calling the
