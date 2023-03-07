@@ -18,5 +18,5 @@ func shutdownNow() error {
 	}
 
 	// If both system calls fail, return an error
-	return fmt.Errorf("failed to initiate system shutdown")
+	return fmt.Errorf("Failed to initiate system shutdown.")
 }
