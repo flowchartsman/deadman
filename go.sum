@@ -1,7 +1,5 @@
 github.com/kylelemons/godebug v1.1.0 h1:RPNrshWIDI6G2gRW9EHilWtl7Z6Sb1BR0xunSBf0SNc=
 github.com/kylelemons/godebug v1.1.0/go.mod h1:9/0rRGxNHcop5bhtWyNeEfOS8JIWk580+fNqagV/RAw=
-github.com/libimobiledevice/usbmuxd v1.0.8 h1:8ZXB+vnZWc7fHHu1qW0A+7bEteMf+uogZk+iE9qDcBE=
-github.com/libimobiledevice/usbmuxd v1.0.8/go.mod h1:KhlkbmakY062lfHeFSt1vJ4gK57qQ9O8uft8elHA3VE=
 github.com/naoina/go-stringutil v0.1.0 h1:rCUeRUHjBjGTSHl0VC00jUPLz8/F9dDzYI70Hzifhks=
 github.com/naoina/go-stringutil v0.1.0/go.mod h1:XJ2SJL9jCtBh+P9q5btrd/Ylo8XwT/h1USek5+NqSA0=
 github.com/naoina/toml v0.1.1 h1:PT/lllxVVN0gzzSqSlHEmP8MJB4MY2U7STGxiouV4X8=
