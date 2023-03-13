@@ -12,6 +12,7 @@ type config struct {
 	PollInterval    int
 	ShutdownTimeout int
 	Commands        []string
+	ExemptDevices   []device
 	//EmergencyFallback bool
 	//EmergencyInterval int
 }

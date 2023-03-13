@@ -9,75 +9,100 @@ import (
 )
 
 func main() {
-
-	//Load the config file
-	var configFile string
-	var conf *config
-
-	flag.StringVar(&configFile, "configfile", "", "config file to use")
+	configFile := ""
+	flag.StringVar(&configFile, "configfile", "", "The config file to use.")
 	flag.Parse()
 
-	if configFile != "" {
-		var err error
-		conf, err = loadConfig(configFile)
-		if err != nil {
-			log.Fatal("failed to parse config file: ", err)
-		}
-	} else {
-		log.Println("defaulting to immediate shutdown and 1 second polling interval")
-		conf = &config{Shutdown: true, PollInterval: 1000, ShutdownTimeout: 10000}
-	}
+	conf := getConfig(configFile)
 
-	initialDevices, err := enumerateDevices()
+	deviceMap, err := getInitialDeviceMap(conf)
 	if err != nil {
 		log.Fatal(err)
-	}
-
-	deviceMap := map[device]int64{}
-
-	if len(initialDevices) > 0 {
-		now := time.Now().UnixNano()
-		for _, d := range initialDevices {
-			deviceMap[d] = now
-		}
-	} else {
-		log.Fatal("No devices found")
 	}
 
 	sigint := make(chan os.Signal, 1)
 	signal.Notify(sigint, os.Interrupt)
 
 	check := time.NewTicker(time.Duration(conf.PollInterval) * time.Millisecond)
-
-	log.Println("deadman started (press ctrl-c to exit)")
+	log.Println("Deadman running (Press Ctrl-C to exit.)  ...")
 
 	for {
 		select {
 		case <-check.C:
 			now := time.Now().UnixNano()
-			devices, err := enumerateDevices()
-			if err != nil {
-				log.Fatal(err)
-			}
-			// Look to see if there are any new devicies
-			for _, d := range devices {
-				if _, ok := deviceMap[d]; !ok {
-					log.Printf("New device: %s [%s]\n", d.Name, d.ID)
-					shutdownSequence(conf)
-				}
-				deviceMap[d] = now
-			}
-
-			// Look to see if any devices have been removed
-			for d, t := range deviceMap {
-				if t != now {
-					log.Printf("Device %s [%s]  has been removed\n", d.Name, d.ID)
-					shutdownSequence(conf)
-				}
-			}
+			checkForNewDevices(deviceMap, now, conf)
+			checkForRemovedDevices(deviceMap, now)
 		case <-sigint:
-			log.Println("SIGINT received")
+			log.Println("SIGINT was received, exiting.")
 			os.Exit(0)
+		}
+	}
+}
+
+func getConfig(configFile string) *config {
+	if configFile != "" {
+		conf, err := loadConfig(configFile)
+		if err != nil {
+			log.Fatal("Failed to parse config file: ", err)
+		}
+		return conf
+	} else {
+		log.Println("Defaulting to immediate shutdown and 1 second polling interval.")
+		return &config{Shutdown: true, PollInterval: 1000, ShutdownTimeout: 10000}
+	}
+}
+
+func getInitialDeviceMap(conf *config) (map[device]int64, error) {
+	initialDevices, err := enumerateDevices()
+	if err != nil {
+		return nil, err
+	}
+
+	if len(initialDevices) == 0 {
+		log.Fatal("No devices were found. Is the USB subsystem running?")
+	}
+
+	deviceMap := make(map[device]int64)
+	now := time.Now().UnixNano()
+	for _, d := range initialDevices {
+		if isExemptDevice(d, conf) {
+			deviceMap[d] = now
+		}
+	}
+	return deviceMap, nil
+}
+
+func isExemptDevice(d device, conf *config) bool {
+	for _, wd := range conf.ExemptDevices {
+		if wd.Name == d.Name && wd.ID == d.ID {
+			return true
+		}
+	}
+	return false
+}
+
+func checkForNewDevices(deviceMap map[device]int64, now int64, conf *config) {
+	devices, err := enumerateDevices()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, d := range devices {
+		if _, ok := deviceMap[d]; !ok && isExemptDevice(d, conf) {
+			log.Printf("New device: %s [%s]\n", d.Name, d.ID)
+			shutdownNow()
+			deviceMap[d] = now
+		} else {
+			deviceMap[d] = now
+		}
+	}
+}
+
+func checkForRemovedDevices(deviceMap map[device]int64, now int64) {
+	for d, t := range deviceMap {
+		if t != now {
+			log.Printf("Device %s [%s] has been removed\n", d.Name, d.ID)
+			shutdownNow()
 		}
 	}
 }

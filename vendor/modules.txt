@@ -1,0 +1,11 @@
+# github.com/kylelemons/godebug v1.1.0
+## explicit; go 1.11
+# github.com/libimobiledevice/usbmuxd v1.0.8
+## explicit
+# github.com/naoina/go-stringutil v0.1.0
+## explicit
+github.com/naoina/go-stringutil
+# github.com/naoina/toml v0.1.1
+## explicit
+github.com/naoina/toml
+github.com/naoina/toml/ast
